@@ -1,0 +1,19 @@
+version: "2.1"
+services:
+  tests:
+    image: golang:1.12
+    working_dir: /go/src/github.com/sergii4/redis-delayed-queue
+    volumes:
+      - $PWD:/go/src/github.com/sergii4/redis-delayed-queue
+      - go-modules:/go/pkg/mod # Put modules cache into a separate volume
+    depends_on:
+      - testredis
+    command: ["/bin/sh", "-c", "GO111MODULE=on go test -v -timeout 30s"]
+
+  testredis:
+    image: grokzen/redis-cluster:latest
+    logging:
+      driver: "none"
+
+volumes:
+  go-modules: # Define the volume
